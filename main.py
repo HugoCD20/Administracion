@@ -21,12 +21,18 @@ def consulta_estudiante():
 def inicio():
     ventana.withdraw()
     ventana2.withdraw()
+    ventana4.withdraw()
 
 def volver1():
     tabla.delete(*tabla.get_children())
     llenartabla()
     ventana.withdraw()
     ventana2.withdraw()
+def volver2():
+    ventana4.withdraw()
+    tabla3.delete(*tabla3.get_children())
+    llenartabla2()
+    ventana3.deiconify()
 
 def agregahoras():
     ventana3.deiconify()
@@ -103,13 +109,11 @@ def modificarE(event):
         # No hay elementos seleccionados, puedes manejar esto según tu lógica
         pass
     values = tabla3.item(selected_item, "values")
+    usuario.append(values)
     ventana3.withdraw()
-    ventana2.deiconify()
-    nombre=values[1]+" "+values[2]
-    apellido1_1=Label(contenedor2,text=nombre,bg="white",font=("Arial", 10, "bold italic")).place(x=100,y=10)
-    datos = ConsultarHoras(values[0])
-    for dato in datos:
-        tabla2.insert("", "end", values=dato)
+    ventana4.deiconify()
+    
+    
 
 def llenartabla():
     datos = mostrar_estudiante()
@@ -119,6 +123,34 @@ def llenartabla2():
     datos = mostrar_estudiante()
     for dato in datos:
         tabla3.insert("", "end", values=dato)
+
+def newhours():
+    texto = tallerbox.get()
+    texto2 = Documentobox.get()
+    try:
+        texto3 = int(Duracionbox.get())
+    except:
+        pass
+    try:
+        texto4 = int(HorasEbox.get())
+    except:
+        pass
+    texto5 = infbox.get()
+    print(usuario)
+    if texto!="":
+        if texto2=="":
+            texto2="VACIO"
+        else:
+            pass
+        if texto3:
+            pass
+        else:
+            pass#aqui debe de salir un mensaje de error
+        if texto4:
+            pass
+        else:
+            pass#aqui debe de salir un mensaje de error
+
 
 miFrame=Frame()
 miFrame.pack(fill="both", expand="True")
@@ -288,7 +320,7 @@ frame5.config(relief="groove")
 titulo3 = Frame(frame5, width=ancho, height=alto/12, bg="white")
 titulo3.pack()
 
-label3 = Label(titulo3, text="AGRAGAR HORAS", font=("Arial", 17, "bold italic"), bg="white")
+label3 = Label(titulo3, text="AGREGAR HORAS", font=("Arial", 17, "bold italic"), bg="white")
 label3.pack()
 label3.place(x=ancho/2.7, y=2)
 
@@ -327,13 +359,76 @@ tabla3.place(x=250,y=60)
 center_content(tabla3, "Semestre")
 llenartabla2()
 tabla3.bind("<<TreeviewSelect>>", modificarE)
+##--------------ventana para agregar usuario---------------------##
+usuario=[]
+ventana4 = Toplevel(root)
+ventana4.title("Agregar Horas")
+ventana4.geometry(f"{ancho}x{alto}")
+ventana4.config(bg="white")
+ventana4.iconbitmap("image/logo-escuela-de-ciencias.ico")
+
+frame6=Frame(ventana4)
+frame6.pack(fill="both", expand="True")
+frame6.config(bg="white")
+frame6.config(bd=21)
+frame6.config(relief="groove")
+
+titulo4 = Frame(frame6, width=ancho, height=alto/12, bg="white")
+titulo4.pack()
+
+label4 = Label(titulo4, text="AGREGAR HORAS", font=("Arial", 17, "bold italic"), bg="white")
+label4.pack()
+label4.place(x=ancho/2.7, y=2)
+
+imagen6 = PhotoImage(file="image/flecha.png")
+imagen_redimensionada6 = imagen6.subsample(5, 5)  
+
+boton9 = Button(titulo4, image=imagen_redimensionada6, width=40, height=20, command=volver2, bg="white", borderwidth=0)
+boton9.pack()
+boton9.place(x=10, y=10)  
+
+imagen7 = PhotoImage(file="image/inicio.png")
+imagen_redimensionada7 = imagen7.subsample(25, 25)
+
+boton10 = Button(titulo4, image=imagen_redimensionada7, width=40, height=20, command=inicio, bg="white", borderwidth=0)
+boton10.pack()
+boton10.place(x=(ancho/10)*8, y=20)  
+
+taller=Label(frame6,text="Taller/Curso:",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=100)
+tallerbox=Entry(frame6,width=50)
+tallerbox.place(x=ancho/3,y=130)
+tallerbox.config(relief="solid")
+
+Documento=Label(frame6,text="Documento(Opcional):",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=160)
+Documentobox=Entry(frame6,width=50)
+Documentobox.place(x=ancho/3,y=190)
+Documentobox.config(relief="solid")
+
+Duracion=Label(frame6,text="Duracion:",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=220)
+Duracionbox=Entry(frame6,width=50)
+Duracionbox.place(x=ancho/3,y=250)
+Duracionbox.config(relief="solid")
+
+HorasE=Label(frame6,text="Horas Extras(opcional):",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=280)
+HorasEbox=Entry(frame6,width=50)
+HorasEbox.place(x=ancho/3,y=320)
+HorasEbox.config(relief="solid")
+
+inf=Label(frame6,text="Informacion recuperada(opcional):",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=280)
+infbox=Entry(frame6,width=50)
+infbox.place(x=ancho/3,y=320)
+infbox.config(relief="solid")
+
+botonF = Button(frame6, text="Agregar", command=newhours,bg="black",fg="white")
+botonF.place(x=ancho/3,y=350)
 
 ventana.protocol("WM_DELETE_WINDOW", volver1)
-ventana2.protocol("WM_DELETE_WINDOW", inicio)
+ventana2.protocol("WM_DELETE_WINDOW", inicio) 
 
 ventana.withdraw()
 ventana2.withdraw()
 ventana3.withdraw()
+ventana4.withdraw()
 root.protocol("WM_DELETE_WINDOW", on_cerrar_ventana)
 
 
