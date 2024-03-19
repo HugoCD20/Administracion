@@ -9,5 +9,25 @@ def mostrar_estudiante():
     cursor.execute(sql)
     resultado=cursor.fetchall()
     for datos in resultado:
-        lista.append((datos[1],datos[2],datos[3]))
+        lista.append(datos)
     return lista
+
+def ConsultarHoras(id):
+    list=[]
+    sql=f"SELECT * FROM Registro where id_estudiante='{id}'"
+    cursor.execute(sql)
+    resultado=cursor.fetchall()
+    for dato in resultado:
+        list.append((dato[2],dato[3],dato[4],dato[5],dato[6]))
+    return list
+
+def buscarestudiante(apellidos):
+    sql=f"SELECT * FROM Estudiantes where Apellidos='{apellidos}'"
+    cursor.execute(sql)
+    resultado=cursor.fetchall()
+    if resultado:
+        return resultado
+    else:
+        no="vacio"
+        return no
+
