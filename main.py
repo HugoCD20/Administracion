@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from functions import obtener_tamaño_pantalla,on_button_click
 from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras
+indice=[]
 root = Tk()
 root.title("Registro de horas extracurriculares")
 root.config(bg="white")
@@ -12,27 +13,29 @@ root.iconbitmap("image/logo-escuela-de-ciencias.ico")
 def on_cerrar_ventana():
     root.destroy()
 def cerrar_C():
-    ventana.destroy()
+    ventana3.destroy()
 
 def consulta_estudiante():
-    vBandera=1
-    ventana.deiconify()
+    indice.append(1)
+    ventana3.deiconify()
 
 def inicio():
-    ventana.withdraw()
     ventana2.withdraw()
     ventana3.withdraw()
     ventana4.withdraw()
     usuario=[]
+    indice.pop(0)
 
 def volver1():
-    tabla.delete(*tabla.get_children())
-    llenartabla()
-    ventana.withdraw()
+    tabla3.delete(*tabla3.get_children())
+    llenartabla2()
+    indice.pop(0)
+    ventana3.withdraw()
     ventana2.withdraw()
 
 def volver3():
     tabla3.delete(*tabla3.get_children())
+    indice.pop(0)
     llenartabla2()
     ventana3.withdraw()
     
@@ -44,32 +47,16 @@ def volver2():
     usuario=[]
 
 def agregahoras():
+    indice.append(2)
     ventana3.deiconify()
 
 def regreso1():
     vBandera=1#esta variable es provicional en lo que se hacen las conexiones con la base de datos
     if vBandera==1:
+        tabla2.delete(*tabla2.get_children())
         ventana2.withdraw()
-        ventana.deiconify()
+        ventana3.deiconify()
 
-def obtener_texto():
-    texto = entrada.get()
-    texto2 = entrada2.get()
-    error = Label(contenedor1, text="", bg="white", fg="red")
-    error.place(x=670, y=30)
-
-    if texto == "" and texto2 == "":
-        error.config(text="Ingresa un apellido paterno y materno")
-    else:
-        apellidos = texto + " " + texto2
-        datos = buscarestudiante(apellidos)
-        if datos != "vacio":
-            error.config(text="                                                                                                ")
-            tabla.delete(*tabla.get_children())
-            for dato in datos:
-                tabla.insert("", "end", values=dato)
-        else:
-            error.config(text="No se encontraron resultados               ")
 def obtener_texto2():
     texto = entrada3.get()
     texto2 = entrada4.get()
@@ -83,7 +70,7 @@ def obtener_texto2():
         datos = buscarestudiante(apellidos)
         if datos != "vacio":
             error.config(text="                                                                                                ")
-            tabla3.delete(*tabla.get_children())
+            tabla3.delete(*tabla3.get_children())
             for dato in datos:
                 tabla3.insert("", "end", values=dato)
         else:
@@ -95,15 +82,8 @@ def center_content(tree, column):
     tree.heading(column, anchor='center')
     tree.column(column, anchor='center')
 
-def on_select(event):
-    if tabla.selection():  # Verificar si hay elementos seleccionados
-        selected_item = tabla.selection()[0]
-        # Resto de tu lógica aquí
-    else:
-        # No hay elementos seleccionados, puedes manejar esto según tu lógica
-        pass
-    values = tabla.item(selected_item, "values")
-    ventana.withdraw()
+def on_select(values):
+    ventana3.withdraw()
     ventana2.deiconify()
     nombre=values[1]+" "+values[2]
     apellido1_1=Label(contenedor2,text=nombre,bg="white",font=("Arial", 10, "bold italic")).place(x=100,y=10)
@@ -119,15 +99,14 @@ def modificarE(event):
         pass
     values = tabla3.item(selected_item, "values")
     usuario.append(values)
-    ventana3.withdraw()
-    ventana4.deiconify()
+    if indice[0]==1:
+        on_select(values)
+    elif indice[0]==2:
+        ventana3.withdraw()
+        ventana4.deiconify()
     
     
 
-def llenartabla():
-    datos = mostrar_estudiante()
-    for dato in datos:
-        tabla.insert("", "end", values=dato)
 def llenartabla2():
     datos = mostrar_estudiante()
     for dato in datos:
@@ -236,63 +215,6 @@ frame4.grid_rowconfigure(0, weight=1)
 frame4.grid_columnconfigure(0, weight=1)
 label_imagen.grid(row=0, column=0, sticky=NSEW)
 
-ventana = Toplevel(root)
-ventana.title("Consultar Estudiante")
-ventana.geometry(f"{ancho}x{alto}")
-ventana.config(bg="white")
-ventana.iconbitmap("image/logo-escuela-de-ciencias.ico")
-
-frame3=Frame(ventana)
-frame3.pack(fill="both", expand="True")
-frame3.config(bg="white")
-frame3.config(bd=21)
-frame3.config(relief="groove")
-
-titulo1 = Frame(frame3, width=ancho, height=alto/12, bg="white")
-titulo1.pack()
-
-label1 = Label(titulo1, text="CONSULTAR ESTUDIANTE", font=("Arial", 17, "bold italic"), bg="white")
-label1.pack()
-label1.place(x=ancho/2.7, y=2)
-
-imagen2 = PhotoImage(file="image/flecha.png")
-imagen_redimensionada2 = imagen2.subsample(5, 5)  
-
-boton6 = Button(titulo1, image=imagen_redimensionada2, width=40, height=20, command=volver1, bg="white", borderwidth=0)
-boton6.pack()
-boton6.place(x=10, y=10)  
-
-# Crear el contenedor1
-contenedor1 = Frame(frame3, width=ancho, height=alto/2, bg="white")
-contenedor1.pack()
-contenedor1.grid_propagate(False)  # Desactiva la propagación de la cuadrícula en el contenedor1
-
-# Crear la caja de entrada dentro de contenedor1
-apellido1=Label(contenedor1,text="Apellido paterno:",bg="white").place(x=320,y=10)
-apellido2=Label(contenedor1,text="Apellido materno:",bg="white").place(x=470,y=10)
-entrada = Entry(contenedor1)
-entrada.place(x=320,y=30)
-entrada.config(relief="solid")
-entrada2 = Entry(contenedor1)
-entrada2.place(x=470,y=30)
-entrada2.config(relief="solid")
-# Crear un botón para obtener el texto ingresado
-botonb = Button(contenedor1, text="Buscar", command=obtener_texto,bg="black",fg="white")
-botonb.place(x=620,y=30)
-
-tabla = ttk.Treeview(contenedor1, columns=("id","Apellidos", "Nombre(s)", "Semestre"), show="headings")
-tabla.heading("id", text="id")
-tabla.heading("Apellidos", text="Apellidos")
-tabla.heading("Nombre(s)", text="Nombre(s)")
-tabla.heading("Semestre", text="Semestre")
-tabla.column("#1",width=20)
-tabla.place(x=250,y=60)
-center_content(tabla, "Semestre")
-center_content(tabla, "Nombre(s)")
-center_content(tabla, "Apellidos")
-llenartabla()
-tabla.bind("<<TreeviewSelect>>", on_select)
-
 ventana2 = Toplevel(root)
 ventana2.title("Consultar horas")
 ventana2.geometry(f"{ancho}x{alto}")
@@ -346,7 +268,7 @@ center_content(tabla2, "inf. recuperada")
 tabla2.place(x=60,y=60)
 
 ventana3 = Toplevel(root)
-ventana3.title("Agregar Horas")
+ventana3.title("Consulta estudiante")
 ventana3.geometry(f"{ancho}x{alto}")
 ventana3.config(bg="white")
 ventana3.iconbitmap("image/logo-escuela-de-ciencias.ico")
@@ -360,7 +282,7 @@ frame5.config(relief="groove")
 titulo3 = Frame(frame5, width=ancho, height=alto/12, bg="white")
 titulo3.pack()
 
-label3 = Label(titulo3, text="AGREGAR HORAS", font=("Arial", 17, "bold italic"), bg="white")
+label3 = Label(titulo3, text="CONSULTAR HORAS", font=("Arial", 17, "bold italic"), bg="white")
 label3.pack()
 label3.place(x=ancho/2.7, y=2)
 
@@ -470,12 +392,10 @@ option_menu.place(x=ancho/3,y=450)
 botonF = Button(frame6, text="Agregar", command=newhours,bg="black",fg="white")
 botonF.place(x=ancho/3,y=480)
 
-ventana.protocol("WM_DELETE_WINDOW", volver1)
 ventana2.protocol("WM_DELETE_WINDOW", inicio) 
 ventana3.protocol("WM_DELETE_WINDOW", inicio) 
 ventana4.protocol("WM_DELETE_WINDOW", inicio) 
 
-ventana.withdraw()
 ventana2.withdraw()
 ventana3.withdraw()
 ventana4.withdraw()
