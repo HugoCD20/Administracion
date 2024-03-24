@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from functions import obtener_tamaño_pantalla,on_button_click
-from model import mostrar_estudiante, ConsultarHoras,buscarestudiante
+from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras
 root = Tk()
 root.title("Registro de horas extracurriculares")
 root.config(bg="white")
@@ -21,18 +21,27 @@ def consulta_estudiante():
 def inicio():
     ventana.withdraw()
     ventana2.withdraw()
+    ventana3.withdraw()
     ventana4.withdraw()
+    usuario=[]
 
 def volver1():
     tabla.delete(*tabla.get_children())
     llenartabla()
     ventana.withdraw()
     ventana2.withdraw()
+
+def volver3():
+    tabla3.delete(*tabla3.get_children())
+    llenartabla2()
+    ventana3.withdraw()
+    
 def volver2():
     ventana4.withdraw()
     tabla3.delete(*tabla3.get_children())
     llenartabla2()
     ventana3.deiconify()
+    usuario=[]
 
 def agregahoras():
     ventana3.deiconify()
@@ -124,30 +133,54 @@ def llenartabla2():
     for dato in datos:
         tabla3.insert("", "end", values=dato)
 
+def calcularhora(opcion,texto3):
+    if opcion=="Asistir":#me quedé aqui falta validar que tipo de horas son
+        if texto3>25:
+            texto3 *=0.2
+            return texto3
+        else:
+            texto3 *=0.12
+            return texto3
+    elif opcion=="Impartir":
+        if texto3>25:
+            texto3 *=0.4
+            return texto3
+        else:
+            texto3 *=0.2
+            return texto3
+
 def newhours():
     texto = tallerbox.get()
     texto2 = Documentobox.get()
+    opcion=opcion_seleccionada.get()
+    fallo=True
     try:
         texto3 = int(Duracionbox.get())
     except:
-        pass
+        fallo=False
     try:
-        texto4 = int(HorasEbox.get())
-    except:
-        pass
-    texto5 = infbox.get()
-    print(usuario)
-    if texto!="":
-        if texto2=="":
-            texto2="VACIO"
-        else:
-            pass
-        if texto3:
-            pass
-        else:
-            pass#aqui debe de salir un mensaje de error
+        texto4 = HorasEbox.get()
         if texto4:
-            pass
+            texto4 = int(texto4)
+    except:
+        fallo=False
+    texto5 = infbox.get()
+    if texto !="":
+        if fallo and texto3:
+            if texto2=="":
+                texto2="VACIO"
+            if texto5=="":
+                texto5="VACIO"
+            if not texto4:
+                if opcion!="Seleccione una opción":
+                    texto4=calcularhora(opcion,texto3)
+
+            AgregarHoras(usuario[0][0],texto,texto2,texto3,texto4,texto5)
+            
+
+
+            
+
         else:
             pass#aqui debe de salir un mensaje de error
 
@@ -255,6 +288,8 @@ tabla.heading("Semestre", text="Semestre")
 tabla.column("#1",width=20)
 tabla.place(x=250,y=60)
 center_content(tabla, "Semestre")
+center_content(tabla, "Nombre(s)")
+center_content(tabla, "Apellidos")
 llenartabla()
 tabla.bind("<<TreeviewSelect>>", on_select)
 
@@ -303,6 +338,11 @@ tabla2.heading("Duracion", text="duracion")
 tabla2.heading("Horas extra", text="Horas extra")
 tabla2.heading("inf. recuperada", text="inf. recuperada")
 tabla2.heading("", text="")
+center_content(tabla2, "Taller")
+center_content(tabla2, "Documento")
+center_content(tabla2, "Duracion")
+center_content(tabla2, "Horas extra")
+center_content(tabla2, "inf. recuperada")
 tabla2.place(x=60,y=60)
 
 ventana3 = Toplevel(root)
@@ -327,7 +367,7 @@ label3.place(x=ancho/2.7, y=2)
 imagen5 = PhotoImage(file="image/flecha.png")
 imagen_redimensionada5 = imagen5.subsample(5, 5)  
 
-boton8 = Button(titulo3, image=imagen_redimensionada5, width=40, height=20, command=volver1, bg="white", borderwidth=0)
+boton8 = Button(titulo3, image=imagen_redimensionada5, width=40, height=20, command=volver3, bg="white", borderwidth=0)
 boton8.pack()
 boton8.place(x=10, y=10)  
 
@@ -357,6 +397,8 @@ tabla3.heading("Semestre", text="Semestre")
 tabla3.column("#1",width=20)
 tabla3.place(x=250,y=60)
 center_content(tabla3, "Semestre")
+center_content(tabla3, "Apellidos")
+center_content(tabla3, "Nombre(s)")
 llenartabla2()
 tabla3.bind("<<TreeviewSelect>>", modificarE)
 ##--------------ventana para agregar usuario---------------------##
@@ -414,16 +456,24 @@ HorasEbox=Entry(frame6,width=50)
 HorasEbox.place(x=ancho/3,y=320)
 HorasEbox.config(relief="solid")
 
-inf=Label(frame6,text="Informacion recuperada(opcional):",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=280)
+inf=Label(frame6,text="Informacion recuperada(opcional):",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=350)
 infbox=Entry(frame6,width=50)
-infbox.place(x=ancho/3,y=320)
+infbox.place(x=ancho/3,y=380)
 infbox.config(relief="solid")
 
+tipo=Label(frame6,text="Tipo:",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=420)
+opcion_seleccionada = StringVar(frame6)
+opcion_seleccionada.set("Seleccione una opción")
+option_menu = OptionMenu(frame6, opcion_seleccionada, "Asistir", "Impartir")
+option_menu.place(x=ancho/3,y=450)
+
 botonF = Button(frame6, text="Agregar", command=newhours,bg="black",fg="white")
-botonF.place(x=ancho/3,y=350)
+botonF.place(x=ancho/3,y=480)
 
 ventana.protocol("WM_DELETE_WINDOW", volver1)
 ventana2.protocol("WM_DELETE_WINDOW", inicio) 
+ventana3.protocol("WM_DELETE_WINDOW", inicio) 
+ventana4.protocol("WM_DELETE_WINDOW", inicio) 
 
 ventana.withdraw()
 ventana2.withdraw()

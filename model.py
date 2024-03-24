@@ -31,3 +31,7 @@ def buscarestudiante(apellidos):
         no="vacio"
         return no
 
+def AgregarHoras(id,taller,documento,duracion,horas,inf):
+    sql=f"INSERT INTO Registro(id_estudiante,Taller,Documento,Duracion,Hrs_extras,inf_recuperada)VALUES({id},'{taller}','{documento}',{duracion},{horas},'{inf}')"
+    cursor.execute(sql)
+    conexion.commit()
