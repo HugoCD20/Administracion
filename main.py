@@ -1,5 +1,6 @@
 from tkinter import *
 from tkinter import ttk
+from tkinter import messagebox
 from functions import obtener_tamaño_pantalla,on_button_click
 from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras
 indice=[]
@@ -25,6 +26,9 @@ def inicio():
     ventana4.withdraw()
     usuario=[]
     indice.pop(0)
+    ventana.withdraw()
+def cerrar_exito():
+    ventana.withdraw()
 
 def volver1():
     tabla3.delete(*tabla3.get_children())
@@ -155,10 +159,7 @@ def newhours():
                     texto4=calcularhora(opcion,texto3)
 
             AgregarHoras(usuario[0][0],texto,texto2,texto3,texto4,texto5)
-            
-
-
-            
+            ventana.deiconify()
 
         else:
             pass#aqui debe de salir un mensaje de error
@@ -391,7 +392,33 @@ option_menu.place(x=ancho/3,y=450)
 
 botonF = Button(frame6, text="Agregar", command=newhours,bg="black",fg="white")
 botonF.place(x=ancho/3,y=480)
+#ventana de exito
+ventana = Toplevel(root)
+ventana.title("Agregar Horas")
+ventana.geometry(f"{600}x{300}")
+ventana.config(bg="white")
+ventana.iconbitmap("image/logo-escuela-de-ciencias.ico")
 
+frame3=Frame(ventana)
+frame3.pack(fill="both", expand="True")
+frame3.config(bg="white")
+frame3.config(bd=21)
+
+imagen8 = PhotoImage(file="image/descarga.png")
+imagen_redimensionada8 = imagen8.subsample(3, 3)
+exito=Label(frame3,image=imagen_redimensionada8)
+exito.place(x=100,y=70)
+
+registro=Label(frame3,text="Registro Exitoso",font=("Arial", 15, "bold italic"))
+registro.place(x=190,y=90)
+
+cerrar=Button(frame3,text="Cerrar",command=cerrar_exito,font=("Arial", 8, "bold italic"))
+cerrar.place(x=190,y=140)
+
+menu=Button(frame3,text="Menu",command=inicio,font=("Arial", 8, "bold italic"))
+menu.place(x=250,y=140)
+
+ventana.protocol("WM_DELETE_WINDOW", cerrar_exito) 
 ventana2.protocol("WM_DELETE_WINDOW", inicio) 
 ventana3.protocol("WM_DELETE_WINDOW", inicio) 
 ventana4.protocol("WM_DELETE_WINDOW", inicio) 
@@ -399,6 +426,7 @@ ventana4.protocol("WM_DELETE_WINDOW", inicio)
 ventana2.withdraw()
 ventana3.withdraw()
 ventana4.withdraw()
+ventana.withdraw()
 root.protocol("WM_DELETE_WINDOW", on_cerrar_ventana)
 
 
