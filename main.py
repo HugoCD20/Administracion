@@ -19,16 +19,21 @@ def cerrar_C():
 def consulta_estudiante():
     indice.append(1)
     ventana3.deiconify()
-
+def ModificarEstudiante():
+    indice.append(3)
+    ventana3.deiconify()
 def inicio():
     ventana2.withdraw()
     ventana3.withdraw()
     ventana4.withdraw()
+    ventana6.withdraw()
+    ventana7.withdraw()
     usuario=[]
     indice.pop(0)
     ventana.withdraw()
 def cerrar_exito():
     ventana.withdraw()
+    ventana5.withdraw()
 
 def volver1():
     tabla3.delete(*tabla3.get_children())
@@ -42,12 +47,16 @@ def volver3():
     indice.pop(0)
     llenartabla2()
     ventana3.withdraw()
+def volver4():
+    ventana2.deiconify()
+    ventana7.withdraw()
     
 def volver2():
     ventana4.withdraw()
     tabla3.delete(*tabla3.get_children())
     llenartabla2()
     ventana3.deiconify()
+    ventana6.withdraw()
     usuario=[]
 
 def agregahoras():
@@ -94,6 +103,18 @@ def on_select(values):
     datos = ConsultarHoras(values[0])
     for dato in datos:
         tabla2.insert("", "end", values=dato)
+def modificarH(event):
+    if tabla2.selection():  # Verificar si hay elementos seleccionados
+        selected_item = tabla2.selection()[0]
+        values = tabla3.item(selected_item, "values")
+        usuario.append(values)
+        ventana7.deiconify()
+        ventana2.withdraw()
+        
+    else:
+        
+        pass
+    
 def modificarE(event):
     if tabla3.selection():  # Verificar si hay elementos seleccionados
         selected_item = tabla3.selection()[0]
@@ -108,6 +129,9 @@ def modificarE(event):
     elif indice[0]==2:
         ventana3.withdraw()
         ventana4.deiconify()
+    else:
+        ventana3.withdraw()
+        ventana6.deiconify()
     
     
 
@@ -163,6 +187,9 @@ def newhours():
 
         else:
             pass#aqui debe de salir un mensaje de error
+    
+def AgregarEstudiante():
+    ventana5.deiconify()
 
 
 miFrame=Frame()
@@ -181,13 +208,13 @@ frame2.grid_propagate(False)  # Evita que el Frame se ajuste al tamaño de sus w
 boton1 = Button(frame2, text="Agregar Horas", bg="#0067E0", command=agregahoras, fg="white", width=40, height=5)
 boton1.grid(row=0, column=0, pady=(50, 0))  # Ajusta el pady para centrar verticalmente
 
-boton2 = Button(frame2, text="Agregar Estudiante", bg="#0067E0", command=on_button_click, fg="white", width=40, height=5)
+boton2 = Button(frame2, text="Agregar Estudiante", bg="#0067E0", command=AgregarEstudiante, fg="white", width=40, height=5)
 boton2.grid(row=1, column=0, pady=10)
 
 boton3 = Button(frame2, text="Consultar Estudiante", bg="#0067E0", command=consulta_estudiante, fg="white", width=40, height=5)
 boton3.grid(row=2, column=0, pady=10)
 
-boton4 = Button(frame2, text="Modificar Estudiante", bg="#0067E0", command=on_button_click, fg="white", width=40, height=5)
+boton4 = Button(frame2, text="Modificar Estudiante", bg="#0067E0", command=ModificarEstudiante, fg="white", width=40, height=5)
 boton4.grid(row=3, column=0, pady=10)
 
 boton5 = Button(frame2, text="Salir", bg="#AA1A1A", command=on_cerrar_ventana, fg="white", width=30, height=4)
@@ -267,6 +294,7 @@ center_content(tabla2, "Duracion")
 center_content(tabla2, "Horas extra")
 center_content(tabla2, "inf. recuperada")
 tabla2.place(x=60,y=60)
+tabla2.bind("<<TreeviewSelect>>", modificarH)
 
 ventana3 = Toplevel(root)
 ventana3.title("Consulta estudiante")
@@ -283,7 +311,7 @@ frame5.config(relief="groove")
 titulo3 = Frame(frame5, width=ancho, height=alto/12, bg="white")
 titulo3.pack()
 
-label3 = Label(titulo3, text="CONSULTAR HORAS", font=("Arial", 17, "bold italic"), bg="white")
+label3 = Label(titulo3, text="ESTUDIANTES", font=("Arial", 17, "bold italic"), bg="white")
 label3.pack()
 label3.place(x=ancho/2.7, y=2)
 
@@ -324,7 +352,7 @@ center_content(tabla3, "Apellidos")
 center_content(tabla3, "Nombre(s)")
 llenartabla2()
 tabla3.bind("<<TreeviewSelect>>", modificarE)
-##--------------ventana para agregar usuario---------------------##
+##--------------ventana para agregar horas---------------------##
 usuario=[]
 ventana4 = Toplevel(root)
 ventana4.title("Agregar Horas")
@@ -392,7 +420,7 @@ option_menu.place(x=ancho/3,y=450)
 
 botonF = Button(frame6, text="Agregar", command=newhours,bg="black",fg="white")
 botonF.place(x=ancho/3,y=480)
-#ventana de exito
+#----------------------ventana de exito---------------------------------------
 ventana = Toplevel(root)
 ventana.title("Agregar Horas")
 ventana.geometry(f"{600}x{300}")
@@ -417,16 +445,219 @@ cerrar.place(x=190,y=140)
 
 menu=Button(frame3,text="Menu",command=inicio,font=("Arial", 8, "bold italic"))
 menu.place(x=250,y=140)
+#--------------------------ventana para aguregar un nuevo estudiante--------------------
+ventana5 = Toplevel(root)
+ventana5.title("Agregar estudiante")
+ventana5.geometry(f"{ancho}x{alto}")
+ventana5.config(bg="white")
+ventana5.iconbitmap("image/logo-escuela-de-ciencias.ico")
+
+frame7=Frame(ventana5)
+frame7.pack(fill="both", expand="True")
+frame7.config(bg="white")
+frame7.config(bd=21)
+frame7.config(relief="groove")
+
+titulo5 = Frame(frame7, width=ancho, height=alto/12, bg="white")
+titulo5.pack()
+
+label5 = Label(titulo5, text="AGREGAR ESTUDIANTE", font=("Arial", 17, "bold italic"), bg="white")
+label5.pack()
+label5.place(x=ancho/2.7, y=2)
+
+imagen9 = PhotoImage(file="image/flecha.png")
+imagen_redimensionada9 = imagen9.subsample(5, 5)  
+
+boton11 = Button(titulo5, image=imagen_redimensionada9, width=40, height=20, command=cerrar_exito, bg="white", borderwidth=0)
+boton11.pack()
+boton11.place(x=10, y=10)  
+
+imagen10 = PhotoImage(file="image/inicio.png")
+imagen_redimensionada10 = imagen10.subsample(25, 25)
+
+boton12 = Button(titulo5, image=imagen_redimensionada10, width=40, height=20, command=cerrar_exito, bg="white", borderwidth=0)
+boton12.pack()
+boton12.place(x=(ancho/10)*8, y=20)  
+
+imagen11=PhotoImage(file="image/usuario.png")
+
+perfil=Label(frame7,image=imagen11)
+perfil.pack()
+
+apellidop=Label(frame7,text="Apellido paterno:",font=("Arial", 12, "italic"))
+apellidop.place(x=ancho/2.6,y=350)
+apellidopbox=Entry(frame7,width=50,relief=SOLID)
+apellidopbox.place(x=ancho/2.6,y=380)
+
+apellidom=Label(frame7,text="Apellido materno:",font=("Arial", 12, "italic"))
+apellidom.place(x=ancho/2.6,y=420)
+apellidombox=Entry(frame7,width=50,relief=SOLID)
+apellidombox.place(x=ancho/2.6,y=450)
+
+nombre=Label(frame7,text="Nombre(s):",font=("Arial", 12, "italic"))
+nombre.place(x=ancho/2.6,y=480)
+nombrebox=Entry(frame7,width=50,relief=SOLID)
+nombrebox.place(x=ancho/2.6,y=520)
+
+semestre=Label(frame7,text="Semestre:",font=("Arial", 12, "italic"))
+semestre.place(x=ancho/2.6,y=550)
+semestrebox=Entry(frame7,width=50,relief=SOLID)
+semestrebox.place(x=ancho/2.6,y=580)
+
+enviar=Button(frame7,text="Enviar",font=("Arial", 12, "italic"),fg="white",bg="black")
+enviar.place(x=ancho/2.6,y=620)
+
+#--+--------------------Modificar estudiante--------------------------+--#
+ventana6 = Toplevel(root)
+ventana6.title("Modificar estudiante")
+ventana6.geometry(f"{ancho}x{alto}")
+ventana6.config(bg="white")
+ventana6.iconbitmap("image/logo-escuela-de-ciencias.ico")
+
+frame8=Frame(ventana6)
+frame8.pack(fill="both", expand="True")
+frame8.config(bg="white")
+frame8.config(bd=21)
+frame8.config(relief="groove")
+
+titulo6 = Frame(frame8, width=ancho, height=alto/12, bg="white")
+titulo6.pack()
+
+label6 = Label(titulo6, text="MODIFICAR ESTUDIANTE", font=("Arial", 17, "bold italic"), bg="white")
+label6.pack()
+label6.place(x=ancho/2.7, y=2)
+
+imagen12 = PhotoImage(file="image/flecha.png")
+imagen_redimensionada12 = imagen12.subsample(5, 5)  
+
+boton13 = Button(titulo6, image=imagen_redimensionada12, width=40, height=20, command=volver2, bg="white", borderwidth=0)
+boton13.pack()
+boton13.place(x=10, y=10)  
+
+imagen13 = PhotoImage(file="image/inicio.png")
+imagen_redimensionada13 = imagen13.subsample(25, 25)
+
+boton14 = Button(titulo6, image=imagen_redimensionada13, width=40, height=20, command=inicio, bg="white", borderwidth=0)
+boton14.pack()
+boton14.place(x=(ancho/10)*8, y=20)  
+
+imagen14=PhotoImage(file="image/usuario.png")
+
+perfil2=Label(frame8,image=imagen14)
+perfil2.pack()
+
+apellidop2=Label(frame8,text="Apellido paterno:",font=("Arial", 12, "italic"))
+apellidop2.place(x=ancho/2.6,y=350)
+apellidopbox2=Entry(frame8,width=50,relief=SOLID)
+apellidopbox2.place(x=ancho/2.6,y=380)
+
+apellidom2=Label(frame8,text="Apellido materno:",font=("Arial", 12, "italic"))
+apellidom2.place(x=ancho/2.6,y=420)
+apellidombox2=Entry(frame8,width=50,relief=SOLID)
+apellidombox2.place(x=ancho/2.6,y=450)
+
+nombre2=Label(frame8,text="Nombre(s):",font=("Arial", 12, "italic"))
+nombre2.place(x=ancho/2.6,y=480)
+nombrebox2=Entry(frame8,width=50,relief=SOLID)
+nombrebox2.place(x=ancho/2.6,y=520)
+
+semestre2=Label(frame8,text="Semestre:",font=("Arial", 12, "italic"))
+semestre2.place(x=ancho/2.6,y=550)
+semestrebox2=Entry(frame8,width=50,relief=SOLID)
+semestrebox2.place(x=ancho/2.6,y=580)
+
+enviar2=Button(frame8,text="Modificar",font=("Arial", 12, "italic"),fg="white",bg="black")
+enviar2.place(x=ancho/2.6,y=620)
+eliminar=Button(frame8,text="Eliminar",font=("Arial", 12, "italic"),fg="white",bg="black")
+eliminar.place(x=(ancho/2.6)+100,y=620)
+
+##--------------ventana para modificar horas---------------------##
+usuario=[]
+ventana7 = Toplevel(root)
+ventana7.title("Agregar Horas")
+ventana7.geometry(f"{ancho}x{alto}")
+ventana7.config(bg="white")
+ventana7.iconbitmap("image/logo-escuela-de-ciencias.ico")
+
+frame9=Frame(ventana7)
+frame9.pack(fill="both", expand="True")
+frame9.config(bg="white")
+frame9.config(bd=21)
+frame9.config(relief="groove")
+
+titulo7 = Frame(frame9, width=ancho, height=alto/12, bg="white")
+titulo7.pack()
+
+label7 = Label(titulo7, text="MODIFICAR HORAS", font=("Arial", 17, "bold italic"), bg="white")
+label7.pack()
+label7.place(x=ancho/2.7, y=2)
+
+imagen15 = PhotoImage(file="image/flecha.png")
+imagen_redimensionada15 = imagen15.subsample(5, 5)  
+ 
+boton15 = Button(titulo7, image=imagen_redimensionada15, width=40, height=20, command=volver4, bg="white", borderwidth=0)
+boton15.pack()
+boton15.place(x=10, y=10)  
+
+imagen16 = PhotoImage(file="image/inicio.png")
+imagen_redimensionada16 = imagen16.subsample(25, 25)
+
+boton16 = Button(titulo7, image=imagen_redimensionada16, width=40, height=20, command=inicio, bg="white", borderwidth=0)
+boton16.pack()
+boton16.place(x=(ancho/10)*8, y=20)  
+
+taller2=Label(frame9,text="Taller/Curso:",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=100)
+tallerbox2=Entry(frame9,width=50)
+tallerbox2.place(x=ancho/3,y=130)
+tallerbox2.config(relief="solid")
+
+Documento2=Label(frame9,text="Documento(Opcional):",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=160)
+Documentobox2=Entry(frame9,width=50)
+Documentobox2.place(x=ancho/3,y=190)
+Documentobox2.config(relief="solid")
+
+Duracion2=Label(frame9,text="Duracion:",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=220)
+Duracionbox2=Entry(frame9,width=50)
+Duracionbox2.place(x=ancho/3,y=250)
+Duracionbox2.config(relief="solid")
+
+HorasE2=Label(frame9,text="Horas Extras(opcional):",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=280)
+HorasEbox2=Entry(frame9,width=50)
+HorasEbox2.place(x=ancho/3,y=320)
+HorasEbox2.config(relief="solid")
+
+inf2=Label(frame9,text="Informacion recuperada(opcional):",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=350)
+infbox2=Entry(frame9,width=50)
+infbox2.place(x=ancho/3,y=380)
+infbox2.config(relief="solid")
+
+tipo2=Label(frame9,text="Tipo:",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=420)
+opcion_seleccionada2 = StringVar(frame9)
+opcion_seleccionada2.set("Seleccione una opción")
+option_menu2 = OptionMenu(frame9, opcion_seleccionada, "Asistir", "Impartir")
+option_menu2.place(x=ancho/3,y=450)
+
+botonF2 = Button(frame9, text="Modificar", command=newhours,bg="black",fg="white")
+botonF2.place(x=ancho/3,y=490)
+eliminar = Button(frame9, text="Eliminar", command=newhours,bg="black",fg="white")
+eliminar.place(x=(ancho/3)+100,y=490)
 
 ventana.protocol("WM_DELETE_WINDOW", cerrar_exito) 
 ventana2.protocol("WM_DELETE_WINDOW", inicio) 
 ventana3.protocol("WM_DELETE_WINDOW", inicio) 
 ventana4.protocol("WM_DELETE_WINDOW", inicio) 
+ventana5.protocol("WM_DELETE_WINDOW", cerrar_exito) 
+ventana6.protocol("WM_DELETE_WINDOW", inicio) 
+ventana7.protocol("WM_DELETE_WINDOW", inicio) 
 
+ventana.withdraw()
 ventana2.withdraw()
 ventana3.withdraw()
 ventana4.withdraw()
-ventana.withdraw()
+ventana5.withdraw()
+ventana6.withdraw()
+ventana7.withdraw()
+
 root.protocol("WM_DELETE_WINDOW", on_cerrar_ventana)
 
 
