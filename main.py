@@ -38,6 +38,14 @@ def inicio():
     ventana.withdraw()
 
 def cerrar_exito():
+    if indice[0]==2:
+        tallerbox.delete(0,END)
+        Documentobox.delete(0,END)  
+        Duracionbox.delete(0,END)  
+        HorasEbox.delete(0,END)  
+        infbox.delete(0,END)  
+        opcion_seleccionada.set("Selecciona una opción")
+
     ventana.withdraw()
     ventana5.withdraw()
 
@@ -75,6 +83,8 @@ def agregahoras():
 
 def regreso1():
     vBandera=1#esta variable es provicional en lo que se hacen las conexiones con la base de datos
+    if usuario:
+        usuario.pop(0)
     if vBandera==1:
         tabla2.delete(*tabla2.get_children())
         ventana2.withdraw()
@@ -116,10 +126,11 @@ def on_select(values):
 def modificarH(event):
     if tabla2.selection():  # Verificar si hay elementos seleccionados
         selected_item = tabla2.selection()[0]
-        values = tabla3.item(selected_item, "values")
+        values = tabla2.item(selected_item, "values")
         usuario.append(values)
         ventana7.deiconify()
         ventana2.withdraw()
+        Llenarhoras(values)
         
     else:
         
@@ -234,8 +245,31 @@ def NuevoEstudiante():
         label8.config(text="Valores de estudiante no validos        ")
         
 
-
-
+def Llenarhoras(values):
+    tallerbox2.delete(0,END)  
+    tallerbox2.insert(0, values[0])  
+    Documentobox2.delete(0,END)  
+    Documentobox2.insert(0, values[1])  
+    Duracionbox2.delete(0,END)  
+    Duracionbox2.insert(0, values[2])
+    HorasEbox2.delete(0,END)  
+    HorasEbox2.insert(0, values[3])
+    infbox2.delete(0,END)  
+    infbox2.insert(0, values[4])
+    duracion=int(values[2])
+    extras=float(values[3])
+    if duracion<25:
+        auxiliar=extras%0.12
+        if auxiliar==0:
+            opcion_seleccionada2.set("Asistir")
+        else:
+            opcion_seleccionada2.set("Impartir")
+    else:
+        auxiliar=extras%0.2
+        if auxiliar==0:
+            opcion_seleccionada2.set("Asistir")
+        else:
+            opcion_seleccionada2.set("Impartir")
 
 miFrame=Frame()
 miFrame.pack(fill="both", expand="True")
@@ -490,7 +524,7 @@ registro.pack()
 cerrar=Button(frame3,text="Cerrar",command=cerrar_exito,font=("Arial", 11),height=1,width=5,bg="#02ACE2")
 cerrar.pack()
 
-#--------------------------ventana para aguregar un nuevo estudiante--------------------
+#--------------------------ventana para agregar un nuevo estudiante--------------------
 ventana5 = Toplevel(root)
 ventana5.title("Agregar estudiante")
 ventana5.geometry(f"{ancho}x{alto}")
@@ -679,7 +713,7 @@ infbox2.config(relief="solid")
 tipo2=Label(frame9,text="Tipo:",bg="white",font=("Arial", 9, "bold italic")).place(x=ancho/3,y=420)
 opcion_seleccionada2 = StringVar(frame9)
 opcion_seleccionada2.set("Seleccione una opción")
-option_menu2 = OptionMenu(frame9, opcion_seleccionada, "Asistir", "Impartir")
+option_menu2 = OptionMenu(frame9, opcion_seleccionada2, "Asistir", "Impartir")
 option_menu2.place(x=ancho/3,y=450)
 
 botonF2 = Button(frame9, text="Modificar", command=newhours,bg="black",fg="white")
