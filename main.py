@@ -20,18 +20,23 @@ def cerrar_C():
 def consulta_estudiante():
     indice.append(1)
     ventana3.deiconify()
+
 def ModificarEstudiante():
     indice.append(3)
     ventana3.deiconify()
+
 def inicio():
     ventana2.withdraw()
     ventana3.withdraw()
     ventana4.withdraw()
     ventana6.withdraw()
     ventana7.withdraw()
-    usuario=[]
-    indice.pop(0)
+    if usuario:
+        usuario.pop(0)
+    if indice:
+        indice.pop(0)
     ventana.withdraw()
+
 def cerrar_exito():
     ventana.withdraw()
     ventana5.withdraw()
@@ -39,15 +44,18 @@ def cerrar_exito():
 def volver1():
     tabla3.delete(*tabla3.get_children())
     llenartabla2()
-    indice.pop(0)
+    if indice:
+        indice.pop(0)
     ventana3.withdraw()
     ventana2.withdraw()
 
 def volver3():
     tabla3.delete(*tabla3.get_children())
-    indice.pop(0)
+    if indice:
+        indice.pop(0)
     llenartabla2()
     ventana3.withdraw()
+
 def volver4():
     ventana2.deiconify()
     ventana7.withdraw()
@@ -58,7 +66,8 @@ def volver2():
     llenartabla2()
     ventana3.deiconify()
     ventana6.withdraw()
-    usuario=[]
+    if usuario:
+        usuario.pop(0)
 
 def agregahoras():
     indice.append(2)
@@ -99,7 +108,7 @@ def center_content(tree, column):
 def on_select(values):
     ventana3.withdraw()
     ventana2.deiconify()
-    nombre=values[1]+" "+values[2]
+    nombre=values[1]+" "+values[2]+"                                    "
     apellido1_1=Label(contenedor2,text=nombre,bg="white",font=("Arial", 10, "bold italic")).place(x=100,y=10)
     datos = ConsultarHoras(values[0])
     for dato in datos:
@@ -117,22 +126,20 @@ def modificarH(event):
         pass
     
 def modificarE(event):
-    if tabla3.selection():  # Verificar si hay elementos seleccionados
+    if tabla3.selection(): 
         selected_item = tabla3.selection()[0]
-        # Resto de tu lógica aquí
+        values = tabla3.item(selected_item, "values")
+        usuario.append(values)
+        if indice[0]==1:
+            on_select(values)
+        elif indice[0]==2:
+            ventana3.withdraw()
+            ventana4.deiconify()
+        else:
+            ventana3.withdraw()
+            ventana6.deiconify()
     else:
-        # No hay elementos seleccionados, puedes manejar esto según tu lógica
         pass
-    values = tabla3.item(selected_item, "values")
-    usuario.append(values)
-    if indice[0]==1:
-        on_select(values)
-    elif indice[0]==2:
-        ventana3.withdraw()
-        ventana4.deiconify()
-    else:
-        ventana3.withdraw()
-        ventana6.deiconify()
     
     
 
@@ -158,6 +165,7 @@ def calcularhora(opcion,texto3):
             return texto3
 
 def newhours():
+    print(usuario)
     texto = tallerbox.get()
     texto2 = Documentobox.get()
     opcion=opcion_seleccionada.get()
@@ -332,7 +340,7 @@ center_content(tabla2, "Horas extra")
 center_content(tabla2, "inf. recuperada")
 tabla2.place(x=60,y=60)
 tabla2.bind("<<TreeviewSelect>>", modificarH)
-
+#----------------------------tabla de estudiantes---------------------------------------
 ventana3 = Toplevel(root)
 ventana3.title("Consulta estudiante")
 ventana3.geometry(f"{ancho}x{alto}")
@@ -389,7 +397,7 @@ center_content(tabla3, "Apellidos")
 center_content(tabla3, "Nombre(s)")
 llenartabla2()
 tabla3.bind("<<TreeviewSelect>>", modificarE)
-##--------------ventana para agregar horas---------------------##
+##---------------------ventana para agregar horas---------------------##
 usuario=[]
 ventana4 = Toplevel(root)
 ventana4.title("Agregar Horas")
