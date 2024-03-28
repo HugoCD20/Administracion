@@ -142,7 +142,7 @@ def llenartabla2():
         tabla3.insert("", "end", values=dato)
 
 def calcularhora(opcion,texto3):
-    if opcion=="Asistir":#me quedé aqui falta validar que tipo de horas son
+    if opcion=="Asistir":
         if texto3>25:
             texto3 *=0.2
             return texto3
@@ -162,32 +162,39 @@ def newhours():
     texto2 = Documentobox.get()
     opcion=opcion_seleccionada.get()
     fallo=True
+    label=Label(frame6,fg="red")
+    label.place(x=ancho/3,y=520)
     try:
         texto3 = int(Duracionbox.get())
     except:
         fallo=False
     try:
         texto4 = HorasEbox.get()
-        if texto4:
+        if texto4!="":
             texto4 = int(texto4)
     except:
         fallo=False
     texto5 = infbox.get()
-    if texto !="":
-        if fallo and texto3:
-            if texto2=="":
-                texto2="VACIO"
-            if texto5=="":
-                texto5="VACIO"
-            if not texto4:
-                if opcion!="Seleccione una opción":
-                    texto4=calcularhora(opcion,texto3)
-
-            AgregarHoras(usuario[0][0],texto,texto2,texto3,texto4,texto5)
-            ventana.deiconify()
-
+    if texto !="" and fallo and texto3!="":
+        if texto2=="":
+            texto2="VACIO"
+        if texto5=="":
+            texto5="VACIO"
+        if texto4 =="":
+            if opcion!="Seleccione una opción":
+                texto4=calcularhora(opcion,texto3)
+                AgregarHoras(usuario[0][0],texto,texto2,texto3,texto4,texto5)
+                ventana.deiconify()  
+                label.config(text="                                                                                        ") 
+            else:
+                label.config(text="Selecciona un tipo de taller. asistir/impartir                ")
         else:
-            pass#aqui debe de salir un mensaje de error
+            AgregarHoras(usuario[0][0],texto,texto2,texto3,texto4,texto5)
+            ventana.deiconify()  
+            label.config(text="                                                                                        ")
+
+    else:
+        label.config(text="Valores no adecuados                                                                        ")
     
 def AgregarEstudiante():
     ventana5.deiconify()
