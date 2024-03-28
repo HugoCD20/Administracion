@@ -3,6 +3,7 @@ from tkinter import ttk
 from tkinter import messagebox
 from functions import obtener_tamaño_pantalla,on_button_click
 from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras
+from model import AgregarEstudiante as nuevo
 indice=[]
 root = Tk()
 root.title("Registro de horas extracurriculares")
@@ -190,6 +191,35 @@ def newhours():
     
 def AgregarEstudiante():
     ventana5.deiconify()
+
+def NuevoEstudiante():
+    Apellidop=apellidopbox.get()
+    Apellidom=apellidombox.get()
+    Nombre=nombrebox.get()
+    Semestre=semestrebox.get()
+    label8=Label(frame7,fg="red")
+    label8.place(x=ancho/2.6,y=650)
+    verdadero=True
+    try:
+        if Semestre !="":
+            Semestre=int(Semestre)
+    except:
+        verdadero=False
+
+
+    if Apellidop != "" and Apellidom != "" and Nombre != "" and Semestre != "" and verdadero:
+        Apellidos= Apellidop+" "+Apellidom
+        resultado=nuevo(Apellidos,Nombre,Semestre)
+        if resultado=="exito":
+            ventana.deiconify()
+            label8.config(text="                                                              ")
+        else:
+            label8.config(text="Ya existe este estudiante            ")
+    else:
+        label8.config(text="Valores de estudiante no validos        ")
+        
+
+
 
 
 miFrame=Frame()
@@ -423,7 +453,7 @@ botonF.place(x=ancho/3,y=480)
 #----------------------ventana de exito---------------------------------------
 ventana = Toplevel(root)
 ventana.title("Agregar Horas")
-ventana.geometry(f"{600}x{300}")
+ventana.geometry(f"{500}x{300}")
 ventana.config(bg="white")
 ventana.iconbitmap("image/logo-escuela-de-ciencias.ico")
 
@@ -433,18 +463,18 @@ frame3.config(bg="white")
 frame3.config(bd=21)
 
 imagen8 = PhotoImage(file="image/descarga.png")
-imagen_redimensionada8 = imagen8.subsample(3, 3)
+imagen_redimensionada8 = imagen8.subsample(2, 2)
 exito=Label(frame3,image=imagen_redimensionada8)
-exito.place(x=100,y=70)
+#exito.place(x=100,y=70)
+exito.pack()
 
 registro=Label(frame3,text="Registro Exitoso",font=("Arial", 15, "bold italic"))
-registro.place(x=190,y=90)
+#registro.place(x=190,y=90)
+registro.pack()
 
-cerrar=Button(frame3,text="Cerrar",command=cerrar_exito,font=("Arial", 8, "bold italic"))
-cerrar.place(x=190,y=140)
+cerrar=Button(frame3,text="Cerrar",command=cerrar_exito,font=("Arial", 11),height=1,width=5,bg="#02ACE2")
+cerrar.pack()
 
-menu=Button(frame3,text="Menu",command=inicio,font=("Arial", 8, "bold italic"))
-menu.place(x=250,y=140)
 #--------------------------ventana para aguregar un nuevo estudiante--------------------
 ventana5 = Toplevel(root)
 ventana5.title("Agregar estudiante")
@@ -504,7 +534,7 @@ semestre.place(x=ancho/2.6,y=550)
 semestrebox=Entry(frame7,width=50,relief=SOLID)
 semestrebox.place(x=ancho/2.6,y=580)
 
-enviar=Button(frame7,text="Enviar",font=("Arial", 12, "italic"),fg="white",bg="black")
+enviar=Button(frame7,text="Enviar",font=("Arial", 12, "italic"),fg="white",bg="black",command=NuevoEstudiante)
 enviar.place(x=ancho/2.6,y=620)
 
 #--+--------------------Modificar estudiante--------------------------+--#

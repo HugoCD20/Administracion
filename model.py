@@ -35,3 +35,15 @@ def AgregarHoras(id,taller,documento,duracion,horas,inf):
     sql=f"INSERT INTO Registro(id_estudiante,Taller,Documento,Duracion,Hrs_extras,inf_recuperada)VALUES({id},'{taller}','{documento}',{duracion},{horas},'{inf}')"
     cursor.execute(sql)
     conexion.commit()
+
+def AgregarEstudiante(Apellidos,Nombre,semestre):
+    sql1=f"SELECT * FROM Estudiantes where Apellidos='{Apellidos}' and Nombres='{Nombre}'"
+    cursor.execute(sql1)
+    resultado=cursor.fetchall()
+    if not resultado:
+        sql=f"INSERT INTO Estudiantes(Apellidos,Nombres,Semestre) Values('{Apellidos}','{Nombre}', '{semestre}')"
+        cursor.execute(sql)
+        conexion.commit()
+        return "exito"
+    else:
+        return "fracaso"
