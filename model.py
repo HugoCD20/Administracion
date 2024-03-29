@@ -57,3 +57,13 @@ def EliminarH(id):
     sql=f"DELETE FROM Registro where id='{id}'"
     cursor.execute(sql)
     conexion.commit()
+
+def ModificarEs(Apellidos,Nombres,Semestre,id):
+    sql=f"UPDATE Estudiantes SET Apellidos='{Apellidos}', Nombres='{Nombres}', Semestre='{Semestre}' where id='{id}'"
+    cursor.execute(sql)
+    conexion.commit()
+
+def EliminarEstudiante(id):
+    sql=f"DELETE FROM Estudiantes where id='{id}'"
+    cursor.execute(sql)
+    conexion.commit()

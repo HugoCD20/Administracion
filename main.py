@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from functions import obtener_tamaño_pantalla,on_button_click
-from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras,EliminarH
+from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras,EliminarH,ModificarEs,EliminarEstudiante
 from model import AgregarEstudiante as nuevo
 from model import Modificarhoras as Mhoras
 indice=[]
@@ -156,6 +156,7 @@ def modificarE(event):
         else:
             ventana3.withdraw()
             ventana6.deiconify()
+            LlernarE(values)
     else:
         pass
     
@@ -325,6 +326,48 @@ def EliminarHora():
         id=horas[0][0]
         EliminarH(id)
         volver4()
+
+def LlernarE(values):
+    apellidopbox2.delete(0,END)  
+    apellidopbox2.insert(0, values[1])  
+    nombrebox2.delete(0,END)  
+    nombrebox2.insert(0, values[2])  
+    semestrebox2.delete(0,END)  
+    semestrebox2.insert(0, values[3])  
+
+def ModificarE():
+    root.withdraw()
+    id=usuario[0][0]
+    verdadero=True
+    texto1=apellidopbox2.get()
+    texto2=nombrebox2.get()
+    try:
+        texto3=semestrebox2.get()
+        if texto3!="":
+            texto3=int(texto3)
+    except:
+        verdadero=False
+    label=Label(frame8,fg="red")
+    label.place(x=ancho/2.6,y=570)
+    if verdadero:
+        if texto1!="" and texto2!="" and texto3!="":
+            resultado = messagebox.askyesno("Confirmación", "¿Estás seguro de modificar este estudiante?")
+            if resultado:
+                ModificarEs(texto1,texto2,texto3,id)
+                label.config(text="                                                  ")
+                volver2()
+        else:
+            label.config(text="Los valores son obligatorios")
+    else:
+        label.config(text="Semestre debe de ser un número")
+
+def EliminarE():
+    root.withdraw()
+    id=usuario[0][0]
+    resultado = messagebox.askyesno("Confirmación", "¿Estás seguro de eliminar este estudiante?")
+    if resultado:
+        EliminarEstudiante(id)
+        volver2()
 
 miFrame=Frame()
 miFrame.pack(fill="both", expand="True")
@@ -681,30 +724,25 @@ imagen14=PhotoImage(file="image/usuario.png")
 perfil2=Label(frame8,image=imagen14)
 perfil2.pack()
 
-apellidop2=Label(frame8,text="Apellido paterno:",font=("Arial", 12, "italic"))
+apellidop2=Label(frame8,text="Apellidos:",font=("Arial", 12, "italic"))
 apellidop2.place(x=ancho/2.6,y=350)
 apellidopbox2=Entry(frame8,width=50,relief=SOLID)
 apellidopbox2.place(x=ancho/2.6,y=380)
 
-apellidom2=Label(frame8,text="Apellido materno:",font=("Arial", 12, "italic"))
-apellidom2.place(x=ancho/2.6,y=420)
-apellidombox2=Entry(frame8,width=50,relief=SOLID)
-apellidombox2.place(x=ancho/2.6,y=450)
-
 nombre2=Label(frame8,text="Nombre(s):",font=("Arial", 12, "italic"))
-nombre2.place(x=ancho/2.6,y=480)
+nombre2.place(x=ancho/2.6,y=410)
 nombrebox2=Entry(frame8,width=50,relief=SOLID)
-nombrebox2.place(x=ancho/2.6,y=520)
+nombrebox2.place(x=ancho/2.6,y=440)
 
 semestre2=Label(frame8,text="Semestre:",font=("Arial", 12, "italic"))
-semestre2.place(x=ancho/2.6,y=550)
+semestre2.place(x=ancho/2.6,y=470)
 semestrebox2=Entry(frame8,width=50,relief=SOLID)
-semestrebox2.place(x=ancho/2.6,y=580)
+semestrebox2.place(x=ancho/2.6,y=500)
 
-enviar2=Button(frame8,text="Modificar",font=("Arial", 12, "italic"),fg="white",bg="black")
-enviar2.place(x=ancho/2.6,y=620)
-eliminar=Button(frame8,text="Eliminar",font=("Arial", 12, "italic"),fg="white",bg="black")
-eliminar.place(x=(ancho/2.6)+100,y=620)
+enviar2=Button(frame8,text="Modificar",font=("Arial", 12, "italic"),fg="white",bg="black",command=ModificarE)
+enviar2.place(x=ancho/2.6,y=530)
+eliminar=Button(frame8,text="Eliminar",font=("Arial", 12, "italic"),fg="white",bg="black",command=EliminarE)
+eliminar.place(x=(ancho/2.6)+100,y=530)
 
 ##--------------ventana para modificar horas---------------------##
 usuario=[]
