@@ -319,6 +319,7 @@ def Modificarhoras():
         label.config(text="Valores invalidos/no pueden haber valores vacios solo el de horas")
 
 def EliminarHora():
+    root.withdraw()
     resultado = messagebox.askyesno("Confirmación", "¿Estás seguro de eliminar la hora?")
     if resultado:
         id=horas[0][0]
