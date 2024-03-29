@@ -7,7 +7,4 @@ def obtener_tamaño_pantalla(root):
 
     return ancho_pantalla, alto_pantalla - alto_barra_tareas
 
-def on_button_click():
-    print("¡Botón presionado!")
-
 

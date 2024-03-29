@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from functions import obtener_tamaño_pantalla,on_button_click
+from functions import obtener_tamaño_pantalla
 from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras,EliminarH,ModificarEs,EliminarEstudiante
 from model import AgregarEstudiante as nuevo
 from model import Modificarhoras as Mhoras
@@ -41,18 +41,28 @@ def inicio():
         indice.pop(0)
     if horas:
         horas.pop(0)
+    tabla3.delete(*tabla3.get_children())
+    llenartabla2()
+    entrada3.delete(0,END)
+    entrada4.delete(0,END)
+    tabla2.delete(*tabla2.get_children())
 
 def cerrar_exito():
-    if indice[0]==2:
-        tallerbox.delete(0,END)
-        Documentobox.delete(0,END)  
-        Duracionbox.delete(0,END)  
-        HorasEbox.delete(0,END)  
-        infbox.delete(0,END)  
-        opcion_seleccionada.set("Selecciona una opción")
+    if indice:
+        if indice[0]==2:
+            tallerbox.delete(0,END)
+            Documentobox.delete(0,END)  
+            Duracionbox.delete(0,END)  
+            HorasEbox.delete(0,END)  
+            infbox.delete(0,END)  
+            opcion_seleccionada.set("Selecciona una opción")
+    else:
+        apellidopbox.delete(0,END)
+        apellidombox.delete(0,END)
+        nombrebox.delete(0,END)
+        semestrebox.delete(0,END)
 
     ventana.withdraw()
-    ventana5.withdraw()
 
 def volver1():
     tabla3.delete(*tabla3.get_children())
@@ -82,6 +92,8 @@ def volver2():
     ventana4.withdraw()
     tabla3.delete(*tabla3.get_children())
     llenartabla2()
+    entrada3.delete(0,END)
+    entrada4.delete(0,END)
     ventana3.deiconify()
     ventana6.withdraw()
     if usuario:
@@ -99,6 +111,10 @@ def regreso1():
         tabla2.delete(*tabla2.get_children())
         ventana2.withdraw()
         ventana3.deiconify()
+    tabla3.delete(*tabla3.get_children())
+    llenartabla2()
+    entrada3.delete(0,END)
+    entrada4.delete(0,END)
 
 def obtener_texto2():
     texto = entrada3.get()
