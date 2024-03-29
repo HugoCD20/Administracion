@@ -2,8 +2,9 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
 from functions import obtener_tamaño_pantalla,on_button_click
-from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras
+from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras,EliminarH
 from model import AgregarEstudiante as nuevo
+from model import Modificarhoras as Mhoras
 indice=[]
 root = Tk()
 root.title("Registro de horas extracurriculares")
@@ -26,16 +27,20 @@ def ModificarEstudiante():
     ventana3.deiconify()
 
 def inicio():
+    root.deiconify()
+    ventana.withdraw()
     ventana2.withdraw()
     ventana3.withdraw()
     ventana4.withdraw()
+    ventana5.withdraw()
     ventana6.withdraw()
     ventana7.withdraw()
     if usuario:
         usuario.pop(0)
     if indice:
         indice.pop(0)
-    ventana.withdraw()
+    if horas:
+        horas.pop(0)
 
 def cerrar_exito():
     if indice[0]==2:
@@ -58,6 +63,7 @@ def volver1():
     ventana2.withdraw()
 
 def volver3():
+    root.deiconify()
     tabla3.delete(*tabla3.get_children())
     if indice:
         indice.pop(0)
@@ -65,8 +71,12 @@ def volver3():
     ventana3.withdraw()
 
 def volver4():
+    if horas:
+        horas.pop(0)
     ventana2.deiconify()
     ventana7.withdraw()
+    tabla2.delete(*tabla2.get_children())
+    on_select(usuario[0])
     
 def volver2():
     ventana4.withdraw()
@@ -127,14 +137,11 @@ def modificarH(event):
     if tabla2.selection():  # Verificar si hay elementos seleccionados
         selected_item = tabla2.selection()[0]
         values = tabla2.item(selected_item, "values")
-        usuario.append(values)
+        horas.append(values)
         ventana7.deiconify()
         ventana2.withdraw()
         Llenarhoras(values)
         
-    else:
-        
-        pass
     
 def modificarE(event):
     if tabla3.selection(): 
@@ -184,13 +191,13 @@ def newhours():
     label=Label(frame6,fg="red")
     label.place(x=ancho/3,y=520)
     try:
-        texto3 = int(Duracionbox.get())
+        texto3 = float(Duracionbox.get())
     except:
         fallo=False
     try:
         texto4 = HorasEbox.get()
         if texto4!="":
-            texto4 = int(texto4)
+            texto4 = float(texto4)
     except:
         fallo=False
     texto5 = infbox.get()
@@ -202,6 +209,7 @@ def newhours():
         if texto4 =="":
             if opcion!="Seleccione una opción":
                 texto4=calcularhora(opcion,texto3)
+                texto4=round(texto4,2)
                 AgregarHoras(usuario[0][0],texto,texto2,texto3,texto4,texto5)
                 ventana.deiconify()  
                 label.config(text="                                                                                        ") 
@@ -247,17 +255,17 @@ def NuevoEstudiante():
 
 def Llenarhoras(values):
     tallerbox2.delete(0,END)  
-    tallerbox2.insert(0, values[0])  
+    tallerbox2.insert(0, values[1])  
     Documentobox2.delete(0,END)  
-    Documentobox2.insert(0, values[1])  
+    Documentobox2.insert(0, values[2])  
     Duracionbox2.delete(0,END)  
-    Duracionbox2.insert(0, values[2])
+    Duracionbox2.insert(0, values[3])
     HorasEbox2.delete(0,END)  
-    HorasEbox2.insert(0, values[3])
+    HorasEbox2.insert(0, values[4])
     infbox2.delete(0,END)  
-    infbox2.insert(0, values[4])
-    duracion=int(values[2])
-    extras=float(values[3])
+    infbox2.insert(0, values[5])
+    duracion=float(values[3])
+    extras=float(values[4])
     if duracion<25:
         auxiliar=extras%0.12
         if auxiliar==0:
@@ -270,6 +278,52 @@ def Llenarhoras(values):
             opcion_seleccionada2.set("Asistir")
         else:
             opcion_seleccionada2.set("Impartir")
+def Modificarhoras():
+    root.withdraw()
+    label=Label(frame9,fg="red")
+    label.place(x=ancho/3,y=520)
+    verdadero=True
+    texto1=tallerbox2.get()
+    texto2=Documentobox2.get()
+    try:
+        texto3=Duracionbox2.get()
+        if texto3!="":
+            texto3=float(texto3)
+    except:
+        verdadero=False
+    try:
+        texto4=HorasEbox2.get()
+        if texto4!="":
+            texto4=float(texto4)
+    except:
+        verdadero=False
+    texto5=infbox2.get()
+    texto6=opcion_seleccionada2.get()
+    verifica=float(horas[0][4])
+    if verdadero and texto1!="" and texto3!="" and texto2!="" and texto5!="":
+        if texto4 == verifica or texto4=="":#en este lado verificamos si hemos modificado las horas si es así ya no se verifica el asistir o impartir
+            texto4=calcularhora(texto6,texto3)
+            texto4=round(texto4,2)
+            resultado = messagebox.askyesno("Confirmación", "¿Estás seguro de modificar la hora?")
+            if resultado:
+                Mhoras(texto1,texto2,texto3,texto4,texto5,horas[0][0])
+                volver4()
+                label.config(text="                                                                                                                ")
+        else:
+            resultado = messagebox.askyesno("Confirmación", "¿Estás seguro de modificar la hora?")
+            if resultado:
+                Mhoras(texto1,texto2,texto3,texto4,texto5,horas[0][0])
+                volver4()
+                label.config(text="                                                                                                                     ")
+    else:
+        label.config(text="Valores invalidos/no pueden haber valores vacios solo el de horas")
+
+def EliminarHora():
+    resultado = messagebox.askyesno("Confirmación", "¿Estás seguro de eliminar la hora?")
+    if resultado:
+        id=horas[0][0]
+        EliminarH(id)
+        volver4()
 
 miFrame=Frame()
 miFrame.pack(fill="both", expand="True")
@@ -360,18 +414,19 @@ contenedor2.pack()
 contenedor2.grid_propagate(False)  # Desactiva la propagación de la cuadrícula en el contenedor1
 
 
-tabla2 = ttk.Treeview(contenedor2, columns=("Taller", "Documento", "Duracion","Horas extra","inf. recuperada",""), show="headings")
+tabla2 = ttk.Treeview(contenedor2, columns=("ID","Taller", "Documento", "Duracion","Horas extra","inf. recuperada"), show="headings")
+tabla2.heading("ID", text="ID")
 tabla2.heading("Taller", text="Taller")
 tabla2.heading("Documento", text="Documento")
 tabla2.heading("Duracion", text="duracion")
 tabla2.heading("Horas extra", text="Horas extra")
 tabla2.heading("inf. recuperada", text="inf. recuperada")
-tabla2.heading("", text="")
 center_content(tabla2, "Taller")
 center_content(tabla2, "Documento")
 center_content(tabla2, "Duracion")
 center_content(tabla2, "Horas extra")
 center_content(tabla2, "inf. recuperada")
+tabla2.column("#1",width=20)
 tabla2.place(x=60,y=60)
 tabla2.bind("<<TreeviewSelect>>", modificarH)
 #----------------------------tabla de estudiantes---------------------------------------
@@ -547,14 +602,14 @@ label5.place(x=ancho/2.7, y=2)
 imagen9 = PhotoImage(file="image/flecha.png")
 imagen_redimensionada9 = imagen9.subsample(5, 5)  
 
-boton11 = Button(titulo5, image=imagen_redimensionada9, width=40, height=20, command=cerrar_exito, bg="white", borderwidth=0)
+boton11 = Button(titulo5, image=imagen_redimensionada9, width=40, height=20, command=inicio, bg="white", borderwidth=0)
 boton11.pack()
 boton11.place(x=10, y=10)  
 
 imagen10 = PhotoImage(file="image/inicio.png")
 imagen_redimensionada10 = imagen10.subsample(25, 25)
 
-boton12 = Button(titulo5, image=imagen_redimensionada10, width=40, height=20, command=cerrar_exito, bg="white", borderwidth=0)
+boton12 = Button(titulo5, image=imagen_redimensionada10, width=40, height=20, command=inicio, bg="white", borderwidth=0)
 boton12.pack()
 boton12.place(x=(ancho/10)*8, y=20)  
 
@@ -652,6 +707,7 @@ eliminar.place(x=(ancho/2.6)+100,y=620)
 
 ##--------------ventana para modificar horas---------------------##
 usuario=[]
+horas=[]
 ventana7 = Toplevel(root)
 ventana7.title("Agregar Horas")
 ventana7.geometry(f"{ancho}x{alto}")
@@ -716,16 +772,16 @@ opcion_seleccionada2.set("Seleccione una opción")
 option_menu2 = OptionMenu(frame9, opcion_seleccionada2, "Asistir", "Impartir")
 option_menu2.place(x=ancho/3,y=450)
 
-botonF2 = Button(frame9, text="Modificar", command=newhours,bg="black",fg="white")
+botonF2 = Button(frame9, text="Modificar", command=Modificarhoras,bg="black",fg="white")
 botonF2.place(x=ancho/3,y=490)
-eliminar = Button(frame9, text="Eliminar", command=newhours,bg="black",fg="white")
+eliminar = Button(frame9, text="Eliminar", command=EliminarHora,bg="black",fg="white")
 eliminar.place(x=(ancho/3)+100,y=490)
 
 ventana.protocol("WM_DELETE_WINDOW", cerrar_exito) 
 ventana2.protocol("WM_DELETE_WINDOW", inicio) 
 ventana3.protocol("WM_DELETE_WINDOW", inicio) 
 ventana4.protocol("WM_DELETE_WINDOW", inicio) 
-ventana5.protocol("WM_DELETE_WINDOW", cerrar_exito) 
+ventana5.protocol("WM_DELETE_WINDOW", inicio) 
 ventana6.protocol("WM_DELETE_WINDOW", inicio) 
 ventana7.protocol("WM_DELETE_WINDOW", inicio) 
 

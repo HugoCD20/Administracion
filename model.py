@@ -18,7 +18,7 @@ def ConsultarHoras(id):
     cursor.execute(sql)
     resultado=cursor.fetchall()
     for dato in resultado:
-        list.append((dato[2],dato[3],dato[4],dato[5],dato[6]))
+        list.append((dato[0],dato[2],dato[3],dato[4],dato[5],dato[6]))
     return list
 
 def buscarestudiante(apellidos):
@@ -47,3 +47,13 @@ def AgregarEstudiante(Apellidos,Nombre,semestre):
         return "exito"
     else:
         return "fracaso"
+
+def Modificarhoras(Taller,Documento,Duracion,Horas,Info,id):
+    sql=f"UPDATE Registro SET Taller='{Taller}', Documento='{Documento}', Duracion='{Duracion}', Hrs_extras='{Horas}', inf_recuperada='{Info}' where id='{id}'"
+    cursor.execute(sql)
+    conexion.commit()
+
+def EliminarH(id):
+    sql=f"DELETE FROM Registro where id='{id}'"
+    cursor.execute(sql)
+    conexion.commit()
