@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
-from functions import obtener_tamaño_pantalla
 from model import mostrar_estudiante, ConsultarHoras,buscarestudiante,AgregarHoras,EliminarH,ModificarEs,EliminarEstudiante
 from model import AgregarEstudiante as nuevo
 from model import Modificarhoras as Mhoras
@@ -9,6 +8,13 @@ indice=[]
 root = Tk()
 root.title("Registro de horas extracurriculares")
 root.config(bg="white")
+def obtener_tamaño_pantalla(root):
+    ancho_pantalla = root.winfo_screenwidth()
+    alto_pantalla = root.winfo_screenheight()
+
+    alto_barra_tareas = root.winfo_screenmmheight() - root.winfo_vrootheight()
+
+    return ancho_pantalla, alto_pantalla - alto_barra_tareas
 ancho, alto = obtener_tamaño_pantalla(root)
 root.geometry(f"{ancho}x{alto}")
 root.iconbitmap("image/logo-escuela-de-ciencias.ico")
